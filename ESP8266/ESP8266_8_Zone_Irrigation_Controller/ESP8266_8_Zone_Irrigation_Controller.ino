@@ -80,12 +80,16 @@ const char LOADED[] PROGMEM = " loaded: ";
 const char HUBPORT[] PROGMEM = "hubPort";
 const char HUPIP[] PROGMEM = "hubIp";
 const char DEVICENAME[] PROGMEM = "deviceName";
+const char WEBHOOKID[] PROGMEM = "webHookId";
+const char HAWEBHOOKPREFIX[] PROGMEM = "haWebHookPrefix";
 
 
-// Smartthings hub information
+// Smartthings and HA hub information
 IPAddress hubIp = INADDR_NONE; // smartthings hub ip
-unsigned int hubPort = 0; // smartthings hub port
+unsigned int hubPort = 8123; // smartthings hub port (HA default 8123)
 String deviceName = "Smart Sprinkler 8 Zone Irrigation Controller";
+String haWebHookPrefix = "/api/webhook/" //HA webhook address
+String webHookId = "smart-sprinkler-8-zone-irrigation-controller" //HA webhook_id
 
 //OTA
 
@@ -137,7 +141,7 @@ void handleRoot() {
   }
   String rootStatus;
   rootStatus = "</style></head><center><table><TH colspan='2'>ESP8266 Smart Sprinkler 8 Zone Irrigation Controller<TR><TD><TD><TR><TD colspan='2'>";
-  rootStatus += "<TR><TD><TD><TR><TD>Main:<TD><a href='/update'>Firmware Update</a><BR><a href='/status'>Status</a><BR><a href='/reboot'>Reboot</a><BR></table><h6>ESP8266 Smart Sprinkler</h6></body></center>";
+  rootStatus += "<TR><TD><TD><TR><TD>Main:<TD><a href='/update'>Firmware Update</a><BR><a href='/status'>Status</a><BR><a href='/configuration'>Configuration</a><BR><a href='/reboot'>Reboot</a><BR></table><h6>ESP8266 Smart Sprinkler</h6></body></center>";
   server.send(200, "text/html", rootStatus);  
 }
 
@@ -362,6 +366,7 @@ void setup(void){
     SSDP.schema(server.client());
   });
   server.on("/config", handleConfig);
+  server.on("/configuration", handleConfig);
   server.on("/reboot", handleReboot);
   server.onNotFound(handleNotFound);
   
