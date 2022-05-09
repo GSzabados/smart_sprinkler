@@ -685,7 +685,10 @@ int sendNotify() //client function to send/receieve POST data.
 {
   int returnStatus = 1;
   if (client.connect(hubIp, hubPort)) {
-    client.println(F("POST / HTTP/1.1"));
+    client.print(F("POST "));
+    client.print(haWebHookPrefix);
+    client.print(webHookId);
+    client.println(F(" HTTP/1.1"));
     client.print(F("HOST: "));
     client.print(hubIp);
     client.print(F(":"));
@@ -730,7 +733,6 @@ String makeUpdate() {
   if (isDebugEnabled) {
     Serial.println("Starting makeUpdate");
   }
-
   StaticJsonBuffer<400> jsonBuffer;
   JsonObject& json = jsonBuffer.createObject();
   JsonObject& rel = json.createNestedObject("relay");
